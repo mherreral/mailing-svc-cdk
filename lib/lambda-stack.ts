@@ -1,16 +1,17 @@
 import * as cdk from 'aws-cdk-lib';
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as iam from 'aws-cdk-lib/aws-iam';
 import * as aws_events from 'aws-cdk-lib/aws-events';
 import * as aws_events_targets from 'aws-cdk-lib/aws-events-targets';
 
 import { Construct } from 'constructs';
-
 interface lambdaStackProps extends cdk.StackProps {
     bucket: s3.Bucket
 }  
 
 import path = require('path');
+
 
 export class LambdaStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: lambdaStackProps) {
@@ -37,5 +38,12 @@ export class LambdaStack extends cdk.Stack {
         targets: [new aws_events_targets.LambdaFunction(fcn)],
     });
     aws_events_targets.addLambdaPermission(eventRule, fcn);
+
+    props.bucket.grantRead(fcn)
+    fcn.addToRolePolicy(new iam.PolicyStatement({
+        actions: ['ses:SendEmail', 'SES:SendRawEmail'],
+        resources: ['*'],
+        effect: iam.Effect.ALLOW,
+    }))
   }
 }
