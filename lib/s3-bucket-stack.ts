@@ -13,7 +13,8 @@ export class BucketStack extends cdk.Stack {
       bucketName: 'email-files-bucket-loka-qwe8',
       publicReadAccess: false,
       removalPolicy: RemovalPolicy.DESTROY,
-      eventBridgeEnabled: true
+      eventBridgeEnabled: true,
+      autoDeleteObjects: true
     });
  }
 }
