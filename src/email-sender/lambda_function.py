@@ -26,7 +26,7 @@ def send_email(event):
         # Try to send the email.
         try:
             #Provide the contents of the email.
-            response = client.send_email(
+            response = ses.send_email(
                 Destination={
                     'ToAddresses': [
                         RECIPIENT,
