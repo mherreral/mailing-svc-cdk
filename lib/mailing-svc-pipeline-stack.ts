@@ -9,7 +9,9 @@ export class MailingSvcPipelineStack extends cdk.Stack {
     const pipeline = new CodePipeline(this, 'Pipeline', {
       pipelineName: 'MailingSvcPipeline',
       synth: new ShellStep('Synth', {
-        input: CodePipelineSource.gitHub('mherreral/mailing-svc-cdk', 'master'),
+        input: CodePipelineSource.gitHub('mherreral/mailing-svc-cdk', 'master', {
+            authentication: cdk.SecretValue.secretsManager('gh-at')
+        }),
         commands: ['npm ci', 'npm run build', 'npx cdk synth']
       })
     });
