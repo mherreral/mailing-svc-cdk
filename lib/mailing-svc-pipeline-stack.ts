@@ -1,8 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
 import * as s3 from 'aws-cdk-lib/aws-s3';
-import { LambdaStack } from '../lib/lambda-stack';
-import { BucketStack } from '../lib/s3-bucket-stack';
-
 import { Construct } from 'constructs';
 import { pipelines, Stack, StackProps, Stage, StageProps } from "aws-cdk-lib";
 import { InfraStage } from './infra-stage';
