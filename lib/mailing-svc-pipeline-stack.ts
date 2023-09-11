@@ -1,15 +1,10 @@
 import * as cdk from 'aws-cdk-lib';
-import * as s3 from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 import { pipelines, Stack, StackProps, Stage, StageProps } from "aws-cdk-lib";
 import { InfraStage } from './infra-stage';
 
-interface lambdaStackProps extends cdk.StackProps {
-  bucket: s3.Bucket
-}
-
 export class MailingSvcPipelineStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props: lambdaStackProps) {
+  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
 
@@ -24,7 +19,7 @@ export class MailingSvcPipelineStack extends cdk.Stack {
     });
 
     const infra = pipeline.addStage(
-      new InfraStage(this, "testing", props), {
+      new InfraStage(this, "testing"), {
         pre: [new pipelines.ManualApprovalStep('Deploy infra')]
       }
       );

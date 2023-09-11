@@ -10,4 +10,4 @@ const app = new cdk.App();
 
 const bucketStack = new BucketStack(app, 'BucketStack', {})
 new LambdaStack(app, 'LambdaStack', {bucket: bucketStack.bucket})
-new MailingSvcPipelineStack(app, 'MyPipelineStack', {bucket: bucketStack.bucket});
+new MailingSvcPipelineStack(app, 'MyPipelineStack');

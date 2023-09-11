@@ -4,15 +4,11 @@ import { Construct } from "constructs";
 import { LambdaStack } from './lambda-stack';
 import { BucketStack } from './s3-bucket-stack';
 
-interface lambdaStackProps extends cdk.StackProps {
-    bucket: s3.Bucket
-}
-
 export class InfraStage extends cdk.Stage {
-    constructor(scope: Construct, stageName: string, props: lambdaStackProps){
+    constructor(scope: Construct, stageName: string, props?: cdk.StageProps){
         super(scope, stageName, props);
 
         const bucketStack = new BucketStack(this, 'BucketStack');
-        const lambdaStack = new LambdaStack(this, 'LambdaStack', props);
+        const lambdaStack = new LambdaStack(this, 'LambdaStack', {bucket: bucketStack.bucket});
     }
 };
