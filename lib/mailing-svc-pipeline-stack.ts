@@ -1,13 +1,18 @@
 import * as cdk from 'aws-cdk-lib';
+import * as s3 from 'aws-cdk-lib/aws-s3';
 import { LambdaStack } from '../lib/lambda-stack';
 import { BucketStack } from '../lib/s3-bucket-stack';
 
 import { Construct } from 'constructs';
 import { pipelines, Stack, StackProps, Stage, StageProps } from "aws-cdk-lib";
-import { infraStage } from './infra-stage';
+import { InfraStage } from './infra-stage';
+
+interface lambdaStackProps extends cdk.StackProps {
+  bucket: s3.Bucket
+}
 
 export class MailingSvcPipelineStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props: lambdaStackProps) {
     super(scope, id, props);
 
 
@@ -21,14 +26,10 @@ export class MailingSvcPipelineStack extends cdk.Stack {
       })
     });
 
-    const deployLambdaStage = new cdk.Stage(this, 'DeployLambda');
-    pipeline.addStage(deployLambdaStage);
-
-    deployLambdaStage.addAction(new codepipeline_actions.CloudFormationCreateUpdateStackAction({
-        actionName: 'DeployLambdaStack',
-        templatePath: cloudAssemblyArtifact.atPath('LambdaStack.template.json'),
-        stackName: 'LambdaStack',
-        adminPermissions: true,
-      }));
+    const infra = pipeline.addStage(
+      new InfraStage(this, "testing", props), {
+        pre: [new pipelines.ManualApprovalStep('Deploy infra')]
+      }
+      );
   }
 }
